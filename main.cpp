@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/21 21:09:27 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/21 21:47:37 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <iterator>
 #include <string>
 
-#include "vector.hpp"
+#include "Vector.hpp"
 
 int	main()
 {	

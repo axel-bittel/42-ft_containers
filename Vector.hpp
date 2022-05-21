@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector.hpp                                         :+:      :+:    :+:   */
+/*   Vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 14:06:13 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/21 21:34:36 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/21 22:00:30 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ namespace ft
 	class vector
 	{
 		typedef	random_access_iterator<T> iterator_type;
+		typedef	reverse_iterator<T> reverse_iterator_type;
 		public:
 			vector() : _begin(NULL), _end(NULL), _size(0), _size_alloued(0){}
 			vector(unsigned int size, const T& value) : _size(size), _size_alloued(0)
@@ -50,9 +51,9 @@ namespace ft
 			}
 			~vector() { _alloc.deallocate(_begin, _size_alloued); }
 			iterator_type	begin() { return (_begin);}
-			reverse_iterator_type	rbegin() { return (_begin);}
+			reverse_iterator_type	rbegin() { return (_end - 1);}
 			iterator_type	end() { return (_end);}
-			reverseiterator_type	rend() { return (_end);}
+			reverse_iterator_type	rend() { return (_begin - 1);}
 			unsigned int	size() { return (_size); }
 			unsigned int	max_size() { return (_alloc.max_size()); }
 			void resize (unsigned int n, T val)
