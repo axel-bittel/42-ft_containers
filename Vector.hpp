@@ -6,11 +6,12 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 14:06:13 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/21 22:00:30 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/22 21:03:08by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "iterator.hpp"
+#include <stdexcept>
 #include <memory>
 
 namespace ft
@@ -18,20 +19,30 @@ namespace ft
 	template<class T, class Alloc = std::allocator<T>>
 	class vector
 	{
-		typedef	random_access_iterator<T> iterator_type;
-		typedef	reverse_iterator<T> reverse_iterator_type;
 		public:
-			vector() : _begin(NULL), _end(NULL), _size(0), _size_alloued(0){}
+			typedef T 										value_type;
+			typedef Alloc 									allocator_type;
+			typedef T&										reference;
+			typedef const T&								const_reference;
+			typedef T*	 									pointer;	
+			typedef const T*								const_pointer;
+			typedef random_access_iterator<T>				iterator;
+			typedef random_access_iterator<const T>			const_iterator;
+			typedef reverse_random_access_iterator<T>		reverse_iterator;
+			typedef reverse_random_access_iterator<const T>	const_reverse_iterator;
+			typedef size_t							size_type;
+
+			vector() : _begin(0), _end(0), _size(0), _size_alloued(0){}
 			vector(unsigned int size, const T& value) : _size(size), _size_alloued(0)
 			{
 				if (size > _alloc.max_size())
 					throw (std::bad_alloc());
 				_begin = _alloc.allocate(size);
 				_end = _begin + size;
-				for (iterator_type i = _begin; i != _end; i++)
-					_alloc.construct(i, value);
+				for (size_type i = 0; _begin + i != _end; i++)
+					_alloc.construct(_begin + i, value);
 			}
-			vector(iterator_type& first, iterator_type& last)
+			vector(iterator& first, iterator& last)
 			{
 				_size = last - first;
 				if (last - first > _alloc.max_size())
@@ -46,14 +57,35 @@ namespace ft
 				_size_alloued = _size;
 				_begin = _alloc.allocate(_size);
 				_end = _begin + _size;
-				for (iterator_type i = _begin, old = cp._begin; i != end; i++, old++)
+				for (iterator i = _begin, old = cp._begin; i != end; i++, old++)
 					*i = *old;
 			}
 			~vector() { _alloc.deallocate(_begin, _size_alloued); }
-			iterator_type	begin() { return (_begin);}
-			reverse_iterator_type	rbegin() { return (_end - 1);}
-			iterator_type	end() { return (_end);}
-			reverse_iterator_type	rend() { return (_begin - 1);}
+			iterator	begin() 
+			{ 
+				iterator	inter(_begin);
+				return inter;
+			}
+			const_iterator	begin() const
+			{ 
+				const_iterator	inter(_begin);
+				return inter;
+			}
+			reverse_iterator	rbegin() 
+			{ 
+				reverse_iterator inter(_end - 1);
+				return inter;
+			}
+			iterator	end() 
+			{ 
+				iterator inter(_end);
+				return (inter);
+			}
+			reverse_iterator	rend() 
+			{ 
+				reverse_iterator inter(_begin - 1);
+				return inter;
+			}
 			unsigned int	size() { return (_size); }
 			unsigned int	max_size() { return (_alloc.max_size()); }
 			void resize (unsigned int n, T val)
@@ -66,14 +98,14 @@ namespace ft
 					return ;
 				}	
 				if (n > _size_alloued)
-					up_size();
-				for (iterator_type it = _end, i = 0; i < _size - n; i++, it++)
+					up_size(n);
+				for (iterator it = _end, i = 0; i < _size - n; i++, it++)
 					*it = val;	
 				_size = n;
 				_end = _begin + n;
 			}
 			unsigned int	capacity() { return (_size_alloued); }
-			bool			empty() { return (size == 0); }
+			bool			empty() { return (_size == 0 ? true : false); }
 			void			reserve(unsigned int n)
 			{
 				if (n > _size_alloued)
@@ -85,19 +117,18 @@ namespace ft
 			}
 			T&	at(unsigned int n)
 			{
-				if (n > _size)
-					trow (std::out_of_range());
+				if (n > _size){}
 				return (_begin[n]);
 			}
 			T&	front() { return (*_begin); }
-			T&	back() { return (*_end); }
-			void assign (iterator_type first, iterator_type last)
+			T&	back() { return (*(_end - 1)); }
+			void assign (iterator first, iterator last)
 			{
 				int	inter_size = last - first;
 				if (inter_size > _alloc.max_size())
 					throw (std::bad_alloc());
-				if (inter_size > _size_alloued)
-					up_size();
+				while (inter_size > _size_alloued)
+					up_size(inter_size);
 				for (unsigned int i = 0; first != last; i++)
 					_begin[i] = *(first++);
 			}
@@ -105,15 +136,15 @@ namespace ft
 			{
 				if (n > _alloc.max_size())
 					throw (std::bad_alloc());
-				if (n > _size_alloued)
-					up_size();
+				while (n > _size_alloued)
+					up_size(n);
 				for (unsigned int i = 0; i < n; i++)
 					_begin[i] = val;
 			}
 			void push_back(const T& val)
 			{
-				if (_begin + _size == _end)
-					up_size();
+				if (_size >= _size_alloued)
+					up_size(_size + 1);
 				_begin[_size] = val;
 				_end++;	
 			}
@@ -124,37 +155,60 @@ namespace ft
 				_alloc.deallocate(_end, 1);
 			}
 
-		Alloc get_allocator() const { return (_alloc); }
+		allocator_type get_allocator() const { return (_alloc); }
+		iterator insert (iterator position, const value_type& val)
+		{
+			unsigned int	pos = position - iterator(_begin);
+			if (_size >= _size_alloued)
+				up_size(_size + 1);
+			else{
+				_end++;
+				_size++;
+			}
+			for (unsigned int i = _end - _begin - 1; i > pos; i--)
+				_begin[i] = _begin[i - 1];
+			_alloc.construct(_begin + pos, val);
+			return iterator(_begin + pos);
+		}
+    	//void insert (iterator position, size_type n, const value_type& val){}
+    	//void insert (iterator position, iterator first, iterator last){}
 		private:
-			void	up_size(bool copy_old = true)
+			void	up_size(int new_size, bool copy_old = true)
 			{
-				if (_size_alloued * 2 > _alloc.max_size())
+				unsigned int new_size_alloued = _size_alloued == 0 ? 1 : _size_alloued;
+				while (new_size_alloued < new_size)
+					new_size_alloued = new_size_alloued << 1;
+				if (new_size_alloued > _alloc.max_size())
 					throw (std::bad_alloc());
-				iterator_type	new_beg = _alloc.allocate(_size_alloued * 2 == 0 ? 1 : _size_alloued * 2);
-				if (copy_old)
-					for (iterator_type old = _begin, newv = new_beg; old != _end; old++, newv++)
-						_alloc.construct(newv, *old);
-				_alloc.deallocate(_begin, _size_alloued);
+				pointer	new_beg = _alloc.allocate(new_size_alloued);
+				for (size_type old = 0; _begin + old != _end; old++)
+				{
+					_alloc.construct(new_beg + old, _begin[old]);
+					_alloc.destroy(_begin + old);
+				}
+				if(_begin)
+					_alloc.deallocate(_begin, _size_alloued);
 				_begin = new_beg;
+				_size_alloued = new_size_alloued;
+				_size = new_size;
 				_end = new_beg + _size;
-				_size_alloued = _size_alloued * 2 == 0 ? 1 : _size_alloued * 2;
 			}
 			void	up_size_to(unsigned int new_capacity, bool copy_old = true)
 			{
 				if (new_capacity > _alloc.max_size())
 					throw (std::bad_alloc());
-				iterator_type	new_beg = _alloc.allocate(new_capacity);
+				pointer	new_beg = _alloc.allocate(new_capacity);
 				if (copy_old)
-					for (iterator_type old = _begin, newv = new_beg; old != _end; old++, newv++)
+					for (pointer old = _begin, newv = new_beg; old != _end; old++, newv++)
 						_alloc.construct(newv, *old);
 				_alloc.deallocate(_begin, _size_alloued);
 				_begin = new_beg;
 				_end = new_beg + _size;
 				_size_alloued = new_capacity;
 			}
-			Alloc			_alloc;
-			iterator_type	_begin;
-			iterator_type	_end;
+			allocator_type	_alloc;
+			pointer			_begin;
+			pointer			_end;
 			unsigned int 	_size;
 			unsigned int	_size_alloued;
 	};

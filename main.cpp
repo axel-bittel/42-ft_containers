@@ -6,31 +6,53 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/21 21:47:37 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/23 00:42:57 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <iterator>
 #include <string>
 
 #include "Vector.hpp"
+#include <chrono>
 
 int	main()
 {	
-	std::vector<int> nv;
-	nv.push_back(1);
-	nv.push_back(2);
-	nv.push_back(3);
-	nv.push_back(4);
-	nv.push_back(5);
-	std::cout << *(nv.rend() - 1) << "/" << *(nv.begin()) << std::endl;
-	std::cout << nv.capacity() << std::endl;
-	std::cout << nv.capacity() << std::endl;
-	for (int i = 0; i < 10; i ++)
-		std::cout << nv[i] << std::endl;
-	std::cout << nv.capacity() << std::endl;
-	std::cout << nv.size() << std::endl;
+	std::ofstream fd ;
+	fd.open ("test1");
+	auto begin1 = std::chrono::high_resolution_clock::now();
+	const ft::vector<int> v(1,2);
+	ft::vector<int>::const_iterator t = v.begin();
+	for (int i = 0; i < 10000; i++)
+	{
+		//fd << v.size() << "/" << v.capacity() << std::endl;
+		//v.insert(v.begin(), i);
+	}
+	for (int i = 0; i < 10000; i++)
+	{
+		//fd << v[i] << std::endl;
+	}
+	auto end1 = std::chrono::high_resolution_clock::now();
+	fd.close();
+	fd.open("test2");
+	auto begin2 = std::chrono::high_resolution_clock::now();
+		std::vector<int> v2(1,2);
+		for (int i = 0; i < 10000; i++)
+		{
+			//fd << v2.size() << "/" << v2.capacity() << std::endl;
+			//v2.insert(v2.begin(), i);
+		}
+		for (int i = 0; i < 10000; i++)
+		{
+			//fd << v2[i] << std::endl;
+		}
+	auto end2 = std::chrono::high_resolution_clock::now();
+	fd.close();
+	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end1 - begin1).count() << std::endl;
+	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end2 - begin2).count() << std::endl;
+	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end1 - begin1).count()  / std::chrono::duration_cast<std::chrono::nanoseconds>(end2 - begin2).count() << std::endl;
 	return (0);
 }
