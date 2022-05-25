@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/26 00:16:13 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/26 00:36:45 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,7 @@ int	main()
 		std::vector<int> v2(10000, 2);
 		std::cout << v1.size() << "/" << v1.capacity() << &(*v1.begin()) << std::endl;
 		std::cout << v2.size() << "/" << v2.capacity() << &(*v2.begin()) << std::endl;
-		v1.swap(v2);
-		//for (int i = 0; i < 5501; i++)
-			//v2.erase(v2.begin() + 100);
+		v2 = v1;
 		std::cout << v1.size() << "/" << v1.capacity() << &(*v1.begin()) << std::endl;
 		std::cout << v2.size() << "/" << v2.capacity() << &(*v2.begin()) << std::endl;
 		/*for (int i = 0; i < 1; i++)

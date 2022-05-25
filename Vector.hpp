@@ -68,12 +68,15 @@ namespace ft
 			}
 			vector& operator= (const vector& x)
 			{
-				clear();
-				up_size_to(x._size_alloued, false);
+				if (x._size > _size_alloued)
+					up_size_to(x._size, false);
+				for (pointer i = _begin; i != end; i++)
+					_alloc.destroy(i);
 				_size = x._size;
 				_end  = _begin + _size;
-				for (pointer i = _begin, cp = x.begin; i != end); i++, cp++)
+				for (pointer i = _begin, cp = x.begin; i != end; i++, cp++)
 					_alloc.construct(i, *cp);
+				return *(this);
 			}
 			iterator	begin() 
 			{ 
@@ -332,3 +335,5 @@ namespace ft
 			pointer			_end;
 			unsigned int 	_size;
 			unsigned int	_size_alloued;
+	};
+};
