@@ -66,6 +66,15 @@ namespace ft
 					_alloc.detroy(i);
 				_alloc.deallocate(_begin, _size_alloued); 
 			}
+			vector& operator= (const vector& x)
+			{
+				clear();
+				up_size_to(x._size_alloued, false);
+				_size = x._size;
+				_end  = _begin + _size;
+				for (pointer i = _begin, cp = x.begin; i != end); i++, cp++)
+					_alloc.construct(i, *cp);
+			}
 			iterator	begin() 
 			{ 
 				iterator	inter(_begin);
@@ -303,10 +312,13 @@ namespace ft
 				if (new_capacity > _alloc.max_size())
 					throw (std::bad_alloc());
 				pointer	new_beg = _alloc.allocate(new_capacity);
-				for (size_type old = 0; _begin + old != _end; old++)
+				if (copy_old)
 				{
-					_alloc.construct(new_beg + old, _begin[old]);
-					_alloc.destroy(_begin + old);
+					for (size_type old = 0; _begin + old != _end; old++)
+					{
+						_alloc.construct(new_beg + old, _begin[old]);
+						_alloc.destroy(_begin + old);
+					}
 				}
 				if (_begin)
 					_alloc.deallocate(_begin, _size_alloued);
@@ -320,5 +332,3 @@ namespace ft
 			pointer			_end;
 			unsigned int 	_size;
 			unsigned int	_size_alloued;
-	};
-};
