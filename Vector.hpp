@@ -60,7 +60,12 @@ namespace ft
 				for (iterator i = _begin, old = cp._begin; i != end; i++, old++)
 					*i = *old;
 			}
-			~vector() { _alloc.deallocate(_begin, _size_alloued); }
+			~vector() 
+			{
+				for (pointer i = _begin; i != _end; i++) 
+					_alloc.detroy(i);
+				_alloc.deallocate(_begin, _size_alloued); 
+			}
 			iterator	begin() 
 			{ 
 				iterator	inter(_begin);
@@ -159,19 +164,94 @@ namespace ft
 		iterator insert (iterator position, const value_type& val)
 		{
 			unsigned int	pos = position - iterator(_begin);
+			pointer			p_pos = &(*position);
 			if (_size >= _size_alloued)
-				up_size(_size + 1);
+			{
+				up_size_insert(_size + 1, pos, val);
+				return iterator(_begin + pos);
+			}
 			else{
 				_end++;
 				_size++;
 			}
-			for (unsigned int i = _end - _begin - 1; i > pos; i--)
-				_begin[i] = _begin[i - 1];
-			_alloc.construct(_begin + pos, val);
+			for (pointer i = _end - 1; i > p_pos; i--)
+				*i = *(i - 1);
+			_begin[pos] = val;
 			return iterator(_begin + pos);
 		}
-    	//void insert (iterator position, size_type n, const value_type& val){}
-    	//void insert (iterator position, iterator first, iterator last){}
+    	void insert (iterator position, size_type n, const value_type& val)
+		{
+			unsigned int	pos = position - iterator(_begin);
+			pointer			p_pos = &(*position) + n;
+			if (_size + n >= _size_alloued)
+				up_size_to(_size + n);
+			else{
+				_end += n;
+				_size += n;
+			}
+			for (pointer i = _end - 1; i > p_pos; i--)
+				*i = *(i - n);
+			for (int i = pos + n - 1; i >= (int)pos; i--)
+				_begin[i] = val;
+		}
+		//TO CHECK
+    	void insert (iterator position, iterator first, iterator last)
+		{
+			size_type		n = last - first;
+			unsigned int	pos = position - iterator(_begin);
+			pointer			p_pos = &(*position) + n;
+			if (_size + n >= _size_alloued)
+				up_size_to(_size + n);
+			else{
+				_end += n;
+				_size += n;
+			}
+			for (pointer i = _end - 1; i > p_pos; i--)
+				*i = *(i - n);
+			for (int i = pos + n - 1; i >= (int)pos; i--, last--)
+				_begin[i] = *last;
+		}
+		iterator erase (iterator position)
+		{
+			_size--;
+			_end--;
+			for (pointer i = &(*position); i != end; i++)
+				*(i) = *(i + 1);
+			_alloc.destroy(_end);
+		}
+		iterator erase (iterator first, iterator last)
+		{
+			size_type	n = last - first;
+			_size -= n;
+			_end -= n;
+			for (pointer i = &(*first); i != &(last) + 1; i++)
+				*(i) = *(i + n);
+			for (pointer i = end; i != _end + n; i++)
+				_alloc.destroy(i);
+		}
+		void swap (ft::vector<value_type>& x)
+		{
+			pointer		old_begin 	= _begin;
+			pointer		old_end	  	= _end;
+			size_type	size		= _size;
+			size_type	_size_all	= _size_alloued;
+
+			_begin = x.begin;
+			_end = x._end;
+			_size = x._size;
+			_size_all = x._size_alloued;
+			x._begin = old_begin;
+			x._end = old_end;
+			x._size = _size;
+			x._size_alloued = _size_all;
+		}
+		void clear()
+		{
+			for (pointer i = _begin; i != _end; i++)
+				_alloc.destroy(i);
+			_size = 0;
+			_end = _begin;
+		}
 		private:
 			void	up_size(int new_size, bool copy_old = true)
 			{
@@ -193,18 +273,47 @@ namespace ft
 				_size = new_size;
 				_end = new_beg + _size;
 			}
+			void	up_size_insert(int new_size, int pos, const value_type& val, bool copy_old = true)
+			{
+				unsigned int new_size_alloued = _size_alloued == 0 ? 1 : _size_alloued;
+				while (new_size_alloued < new_size)
+					new_size_alloued = new_size_alloued << 1;
+				if (new_size_alloued > _alloc.max_size())
+					throw (std::bad_alloc());
+				pointer	new_beg = _alloc.allocate(new_size_alloued);
+				for (size_type old = 0; _begin + old != _end; old++)
+				{
+					if (old > pos)
+						_alloc.construct(new_beg + old, _begin[old - 1]);
+					else
+						_alloc.construct(new_beg + old, _begin[old]);
+					_alloc.destroy(_begin + old);
+				}
+				new_beg[pos] = val;
+				if(_begin)
+					_alloc.deallocate(_begin, _size_alloued);
+				_begin = new_beg;
+				_size_alloued = new_size_alloued;
+				_size = new_size;
+				_end = new_beg + _size;
+			}
+
 			void	up_size_to(unsigned int new_capacity, bool copy_old = true)
 			{
 				if (new_capacity > _alloc.max_size())
 					throw (std::bad_alloc());
 				pointer	new_beg = _alloc.allocate(new_capacity);
-				if (copy_old)
-					for (pointer old = _begin, newv = new_beg; old != _end; old++, newv++)
-						_alloc.construct(newv, *old);
-				_alloc.deallocate(_begin, _size_alloued);
+				for (size_type old = 0; _begin + old != _end; old++)
+				{
+					_alloc.construct(new_beg + old, _begin[old]);
+					_alloc.destroy(_begin + old);
+				}
+				if (_begin)
+					_alloc.deallocate(_begin, _size_alloued);
 				_begin = new_beg;
-				_end = new_beg + _size;
 				_size_alloued = new_capacity;
+				_size = new_capacity;
+				_end = new_beg + _size;
 			}
 			allocator_type	_alloc;
 			pointer			_begin;
