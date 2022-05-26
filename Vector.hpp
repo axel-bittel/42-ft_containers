@@ -16,7 +16,7 @@
 
 namespace ft
 {
-	template<class T, class Alloc = std::allocator<T>>
+	template<class T, class Alloc = std::allocator<T> >
 	class vector
 	{
 		public:
@@ -33,7 +33,7 @@ namespace ft
 			typedef size_t							size_type;
 
 			vector() : _begin(0), _end(0), _size(0), _size_alloued(0){}
-			vector(unsigned int size, const T& value) : _size(size), _size_alloued(0)
+			vector(unsigned int size, const T& value = size_type()) : _size(size), _size_alloued(0)
 			{
 				if (size > _alloc.max_size())
 					throw (std::bad_alloc());
@@ -57,24 +57,24 @@ namespace ft
 				_size_alloued = _size;
 				_begin = _alloc.allocate(_size);
 				_end = _begin + _size;
-				for (iterator i = _begin, old = cp._begin; i != end; i++, old++)
+				for (iterator i = _begin, old = cp._begin; i != _end; i++, old++)
 					*i = *old;
 			}
 			~vector() 
 			{
 				for (pointer i = _begin; i != _end; i++) 
-					_alloc.detroy(i);
+					_alloc.destroy(i);
 				_alloc.deallocate(_begin, _size_alloued); 
 			}
 			vector& operator= (const vector& x)
 			{
 				if (x._size > _size_alloued)
 					up_size_to(x._size, false);
-				for (pointer i = _begin; i != end; i++)
+				for (pointer i = _begin; i != _end; i++)
 					_alloc.destroy(i);
 				_size = x._size;
 				_end  = _begin + _size;
-				for (pointer i = _begin, cp = x.begin; i != end; i++, cp++)
+				for (pointer i = _begin, cp = x.begin; i != _end; i++, cp++)
 					_alloc.construct(i, *cp);
 				return *(this);
 			}
@@ -98,13 +98,18 @@ namespace ft
 				iterator inter(_end);
 				return (inter);
 			}
+			const_iterator	end() const
+			{ 
+				const_iterator	inter(_end);
+				return inter;
+			}
 			reverse_iterator	rend() 
 			{ 
 				reverse_iterator inter(_begin - 1);
 				return inter;
 			}
-			unsigned int	size() { return (_size); }
-			unsigned int	max_size() { return (_alloc.max_size()); }
+			unsigned int	size() const { return (_size); }
+			unsigned int	max_size() const { return (_alloc.max_size()); }
 			void resize (unsigned int n, T val)
 			{
 				if (n < _size)
@@ -121,7 +126,7 @@ namespace ft
 				_size = n;
 				_end = _begin + n;
 			}
-			unsigned int	capacity() { return (_size_alloued); }
+			unsigned int	capacity() const { return (_size_alloued); }
 			bool			empty() { return (_size == 0 ? true : false); }
 			void			reserve(unsigned int n)
 			{
@@ -141,7 +146,7 @@ namespace ft
 			T&	back() { return (*(_end - 1)); }
 			void assign (iterator first, iterator last)
 			{
-				int	inter_size = last - first;
+				size_type inter_size = last - first;
 				if (inter_size > _alloc.max_size())
 					throw (std::bad_alloc());
 				while (inter_size > _size_alloued)
@@ -227,7 +232,7 @@ namespace ft
 		{
 			_size--;
 			_end--;
-			for (pointer i = &(*position); i != end; i++)
+			for (pointer i = &(*position); i != _end; i++)
 				*(i) = *(i + 1);
 			_alloc.destroy(_end);
 		}
@@ -238,7 +243,7 @@ namespace ft
 			_end -= n;
 			for (pointer i = &(*first); i != &(last) + 1; i++)
 				*(i) = *(i + n);
-			for (pointer i = end; i != _end + n; i++)
+			for (pointer i = _end; i != _end + n; i++)
 				_alloc.destroy(i);
 		}
 		void swap (ft::vector<value_type>& x)
@@ -246,16 +251,16 @@ namespace ft
 			pointer		old_begin 	= _begin;
 			pointer		old_end	  	= _end;
 			size_type	size		= _size;
-			size_type	_size_all	= _size_alloued;
+			size_type	size_all	= _size_alloued;
 
 			_begin = x.begin;
 			_end = x._end;
 			_size = x._size;
-			_size_all = x._size_alloued;
+			_size_alloued = x._size_alloued;
 			x._begin = old_begin;
 			x._end = old_end;
-			x._size = _size;
-			x._size_alloued = _size_all;
+			x._size = size;
+			x._size_alloued = size_all;
 		}
 		void clear()
 		{
@@ -264,8 +269,14 @@ namespace ft
 			_size = 0;
 			_end = _begin;
 		}
+		friend	bool	operator==(vector& v1, vector&v2);
+		friend	bool	operator!=(vector<T>& v1, vector<T>& v2);
+		friend	bool	operator<(vector<T>& v1, vector<T>& v2);
+		friend	bool	operator<=(vector<T>& v1, vector<T>& v2);
+		friend	bool	operator>(vector<T>& v1, vector<T>& v2);
+		friend	bool	operator>=(vector<T>& v1, vector<T>& v2);
 		private:
-			void	up_size(int new_size, bool copy_old = true)
+			void	up_size(unsigned int new_size)
 			{
 				unsigned int new_size_alloued = _size_alloued == 0 ? 1 : _size_alloued;
 				while (new_size_alloued < new_size)
@@ -285,7 +296,7 @@ namespace ft
 				_size = new_size;
 				_end = new_beg + _size;
 			}
-			void	up_size_insert(int new_size, int pos, const value_type& val, bool copy_old = true)
+			void	up_size_insert(unsigned int new_size, size_type pos, const value_type& val)
 			{
 				unsigned int new_size_alloued = _size_alloued == 0 ? 1 : _size_alloued;
 				while (new_size_alloued < new_size)
@@ -336,4 +347,52 @@ namespace ft
 			unsigned int 	_size;
 			unsigned int	_size_alloued;
 	};
+	template<class T>
+	bool	is_equal(T& a, T&b) { return (a == b); }
+	template <class iterator1, class iterator2>
+	bool lexicographical_compare (iterator1 first1, iterator1 last1, iterator2 first2, iterator2 last2)
+	{
+		while (first1!=last1)
+		{
+			if (first2==last2 || *first2<*first1) return false;
+			else if (*first1<*first2) return true;
+			++first1; ++first2;
+		}
+		return (first2!=last2);
+	}
+	template<class T>
+	bool	operator==(vector<T>& v1, vector<T>& v2)
+	{
+		if (v1._size != v2._size)
+			return (false);
+		for (size_t i = 0; i < v1._size; i++)
+			if (!is_equal(v1[i], v2[i]))
+				return (false);
+		return (true);
+	}
+	template<class T>
+	bool	operator!=(vector<T>& v1, vector<T>& v2)
+	{
+		return (!(v1 == v2));
+	}
+	template<class T>
+	bool	operator<(vector<T>& v1, vector<T>& v2)
+	{
+		return (lexicographical_compare(iterator(v1._begin), *iterator(v1._end), itarator(v2._begin), iterator(v2._end)));
+	}
+	template<class T>
+	bool	operator<=(vector<T>& v1, vector<T>& v2)
+	{
+		return (!(v2 < v1));
+	}
+	template<class T>
+	bool	operator>(vector<T>& v1, vector<T>& v2)
+	{
+		return (v2 < v1);
+	}
+	template<class T>
+	bool	operator>=(vector<T>& v1, vector<T>& v2)
+	{
+		return (!(v1 < v2));
+	}
 };

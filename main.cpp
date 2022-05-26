@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/26 00:36:45 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/26 17:53:50 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,39 @@
 #include <iterator>
 #include <string>
 
-#include "Vector.hpp"
+#include "vector.hpp"
 #include <chrono>
+
+class A
+{
+private:
+	int	test;
+public:
+	A(int val) : test(val) {}
+	~A(){};
+	bool	operator==(A& op) { return (test == op.test);}
+	bool	operator<(A& op) { return (test < op.test);}
+	friend std::ostream& operator<<(std::ostream& os, A& a);
+};
+std::ostream& operator<<(std::ostream& os, A& a) { os << a.test << std::endl; return (os); }
+
 
 int	main()
 {	
 	std::ofstream fd ;
 	fd.open ("test1");
-	auto begin1 = std::chrono::high_resolution_clock::now();
-		/*for (int i = 0; i < 1; i++)
+	ft::vector<A> v(2, A(5));
+	//int begin1 = std::chrono::high_resolution_clock::now();
+		fd << v.size() << "/" << v.capacity() << std::endl;
+		for (int i = 0; i < 2; i++)
 		{
-			ft::vector<int> v(2,2);
-			v.insert(v.begin() + 1, 10000 , i);
-			fd << v.size() << "/" << v.capacity() << std::endl;
-			for (int i = 0; i < v.size();i++)
-				fd << v[i] << std::endl;
-		}*/
+			fd << v[i] << std::endl;
+		}
 		
-	auto end1 = std::chrono::high_resolution_clock::now();
+	//int end1 = std::chrono::high_resolution_clock::now();
 	fd.close();
 	fd.open("test2");
-	auto begin2 = std::chrono::high_resolution_clock::now();
+	//int begin2 = std::chrono::high_resolution_clock::now();
 		std::vector<int> v1(3, 1);
 		std::vector<int> v2(10000, 2);
 		std::cout << v1.size() << "/" << v1.capacity() << &(*v1.begin()) << std::endl;
@@ -52,10 +64,10 @@ int	main()
 			for (int i = 0; i < v2.size();i++)
 				fd << v2[i] << std::endl;
 		}*/
-	auto end2 = std::chrono::high_resolution_clock::now();
+	//int end2 = std::chrono::high_resolution_clock::now();
 	fd.close();
-	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end1 - begin1).count() << std::endl;
-	std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end2 - begin2).count() << std::endl;
-	std::cout << (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end1 - begin1).count()  / (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end2 - begin2).count() << std::endl;
+	//std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end1 - begin1).count() << std::endl;
+	//std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end2 - begin2).count() << std::endl;
+	//std::cout << (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end1 - begin1).count()  / (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end2 - begin2).count() << std::endl;
 	return (0);
 }

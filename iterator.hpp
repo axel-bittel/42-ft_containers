@@ -6,9 +6,11 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 14:06:30 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/23 00:28:08 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/26 17:41:12 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <vector>
 
 template<class T>
 class Iiterator
@@ -17,6 +19,10 @@ class Iiterator
 		explicit Iiterator(): _data(NULL){}
 		explicit Iiterator(T* data) : _data(data) {}
 		Iiterator(const Iiterator& cp) : _data(cp._data){}
+		virtual unsigned int	operator-(Iiterator<T>& op) const { 
+			return (this->_data - op._data); 
+		}
+	
 	protected:
 		T*	_data;
 };
@@ -38,17 +44,13 @@ class random_access_iterator : public Iiterator<T>
 			inter._data += n; 
 			return inter; 
 		}	
-		random_access_iterator	operator-(std::ptrdiff_t n) { 
+		random_access_iterator	operator-(std::ptrdiff_t n)
+		 { 
 			random_access_iterator<T> inter(*this);
 			inter._data -= n; 
 			return inter; 
 		}
-		unsigned int	operator-(random_access_iterator<T>& op) const { 
-			return (this->_data - op._data); 
-		}
-		unsigned int	operator-(random_access_iterator<T> op) const { 
-			return (this->_data - op._data); 
-		}	
+		friend unsigned int	operator-(random_access_iterator<T>& op, random_access_iterator<T>& op2);
 		T&	operator[](int idx) { return this->_data[idx]; }	
 		T&	operator*() { return *this->_data; }	
 		bool	operator==(random_access_iterator& op) const { return (this->_data == op._data); }	
@@ -72,3 +74,9 @@ class reverse_random_access_iterator : public Iiterator<T>
 		T&	operator*() { return *this->_data; }	
 		operator unsigned int() { return (reinterpret_cast<unsigned long>(this->_data));}
 };
+
+template<class T>
+unsigned int	operator-(random_access_iterator<T>& op, random_access_iterator<T>& op2)
+{
+	return (op2._data - op._data); 
+}
