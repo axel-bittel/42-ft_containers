@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 14:06:30 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/30 00:26:43 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/30 00:48:23 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ class random_access_iterator
 		bool	operator<(random_access_iterator& op)  const { return (this->_data < op._data); }	
 		bool	operator>=(random_access_iterator& op) const { return (this->_data >= op._data); }	
 		bool	operator>(random_access_iterator& op)  const { return (this->_data > op._data); }	
-		operator random_access_iterator<T const>() const { return *(this);}
+		operator random_access_iterator<T const>() const { return *this;}
 };
 
 template<class T>

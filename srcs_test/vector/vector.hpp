@@ -48,7 +48,7 @@ namespace ft
 			typedef size_t							size_type;
 
 			vector() : _begin(0), _end(0), _size(0), _size_alloued(0){}
-			vector(unsigned int size, const T& value = size_type()) : _size(size), _size_alloued(size)
+			vector(unsigned int size, const T& value = value_type()) : _size(size), _size_alloued(size)
 			{
 				if (size > _alloc.max_size())
 					throw (std::bad_alloc());
@@ -270,11 +270,13 @@ namespace ft
 		}
 		iterator erase (iterator position)
 		{
+			size_type n = position - iterator(_begin);
 			_size--;
 			_end--;
 			for (pointer i = &(*position); i != _end; i++)
 				*(i) = *(i + 1);
 			_alloc.destroy(_end);
+			return iterator(_begin + n);
 		}
 		iterator erase (iterator first, iterator last)
 		{
@@ -285,6 +287,7 @@ namespace ft
 				*(i) = *(i + n);
 			for (pointer i = _end; i != _end + n; i++)
 				_alloc.destroy(i);
+			return iterator(_begin + (first - iterator(_begin)));
 		}
 		void swap (ft::vector<value_type>& x)
 		{
