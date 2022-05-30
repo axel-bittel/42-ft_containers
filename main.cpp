@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/29 23:50:13 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/30 16:29:06 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,10 @@ int	main()
 	fd.open ("test1");
 		ft::vector<int> v1(3, 1);
 		ft::vector<int> v2(v1.begin(), --v1.end());
-		std::vector<int> v3(2,3);
-		std::cout << v3.max_size() << "/" << v2.max_size() << std::endl;
+		ft::vector<int>::iterator c1 = v1.begin();
+		ft::vector<int>::const_iterator c = v2.begin();
+		if (c1 == c)
+			return (1);
 		std::cout << v1.size() << "/" << v1.capacity() << &(*v1.begin()) << std::endl;
 		std::cout << v2.size() << "/" << v2.capacity() << &(*v2.begin()) << std::endl;
 
