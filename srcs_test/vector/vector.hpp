@@ -143,7 +143,7 @@ namespace ft
 					_end = _begin + n;
 					for (size_type i = 0; i < _size - n; i++)
 						_alloc.destroy(_end + i);
-					_alloc.deallocate(_end, _size - n);
+					//_alloc.deallocate(_end, 1);
 					_size = n;
 					return ;
 				}	
@@ -268,31 +268,29 @@ namespace ft
 			pointer			p_pos = &(*position) + n;
 			for (pointer i = _end - 1; i >= p_pos; i--)
 				*i = *(i - n);
-			for (int i = pos; i <= (int)pos + n; i++)
+			for (unsigned int i = pos; i < pos + n; i++)
 				_begin[i] = val;
 		}
 		//TO CHECK
     	void insert (iterator position, iterator first, iterator last)
 		{
 			size_type		n = last - first;
+			unsigned int	pos = position - iterator(_begin);
 
 			if (_size + n >= _size_alloued)
 			{
-				pointer	lst_begin = _begin;
 				up_size_to(_size + n);
-				if (position == iterator(lst_begin))
-					position = iterator(_begin);
+				position = iterator(_begin + pos);
 			}
 			else{
 				_end += n;
 				_size += n;
 			}
-			unsigned int	pos = position - iterator(_begin);
 			pointer			p_pos = &(*position) + n;
-			for (pointer i = _end - 1; i > p_pos; i--)
+			for (pointer i = _end - 1; i >= p_pos; i--)
 				*i = *(i - n);
-			for (int i = pos + n - 1; i >= (int)pos; i--, last--)
-				_begin[i] = *last;
+			for (size_type i = pos; i < pos + n; i++, first++)
+				_begin[i] = *first;
 		}
 		iterator erase (iterator position)
 		{

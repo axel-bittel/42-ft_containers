@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 14:06:30 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/30 19:30:45 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/31 14:14:52 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,10 @@ class random_access_iterator : public Iterator<T const>
 			inter._data -= n; 
 			return inter; 
 		}
-		unsigned int	operator-(random_access_iterator<T>& op) const { 
+		int operator-(random_access_iterator<T>& op) const { 
 			return (this->_data - op._data); 
 		}
-		unsigned int	operator-(random_access_iterator<T> const& op) const { 
+		int operator-(random_access_iterator<T> const& op) const { 
 			return (this->_data - op._data); 
 		}	
 		T&	operator[](int idx) { return ((T*)this->_data)[idx]; }	

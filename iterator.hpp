@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 14:06:30 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/30 19:30:45 by abittel          ###   ########.fr       */
+/*   Updated: 2022/05/31 14:30:16 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,10 @@ class random_access_iterator : public Iterator<T const>
 			inter._data -= n; 
 			return inter; 
 		}
-		unsigned int	operator-(random_access_iterator<T>& op) const { 
+		int operator-(random_access_iterator<T>& op) const { 
 			return (this->_data - op._data); 
 		}
-		unsigned int	operator-(random_access_iterator<T> const& op) const { 
+		int operator-(random_access_iterator<T> const& op) const { 
 			return (this->_data - op._data); 
 		}	
 		T&	operator[](int idx) { return ((T*)this->_data)[idx]; }	
@@ -104,8 +104,8 @@ class reverse_iterator_type : public Iterator<T const>
 
 		explicit reverse_iterator_type<T>() : Iterator<T const>(){}
 		explicit reverse_iterator_type<T>(T* data) : Iterator<T const>(data){}
-		reverse_iterator_type<T>(random_access_iterator<T>& cp) : Iterator<T const>(cp) {}
-		reverse_iterator_type<T>(const random_access_iterator<T>& cp) : Iterator<T const>(cp) {}
+		reverse_iterator_type<T>(random_access_iterator<T>& cp) : Iterator<T const>(--cp) {}
+		reverse_iterator_type<T>(const random_access_iterator<T>& cp) : Iterator<T const>(--cp) {}
 		reverse_iterator_type<T>(reverse_iterator_type<T>& cp) : Iterator<T const>(cp) {}
 		reverse_iterator_type<T>(const reverse_iterator_type<T>& cp) : Iterator<T const>(cp) {}
 		reverse_iterator_type<T>&	operator=(reverse_iterator_type<T>& cp) { this->_data = cp._data; return *(this); }	
