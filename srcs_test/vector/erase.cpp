@@ -17,6 +17,7 @@ int		main(void)
 	for (unsigned long int i = 0; i < vct.size(); ++i)
 		vct[i] = std::string((vct.size() - i), i + 65);
 	printSize(vct);
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_iterator it2 = vct.begin();
 
 	checkErase(vct, vct.erase(vct.begin() + 2));
 

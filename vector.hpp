@@ -35,20 +35,21 @@ namespace ft
 	class vector
 	{
 		public:
-			typedef T 										value_type;
 			typedef Alloc 									allocator_type;
+			typedef T 										value_type;
 			typedef typename allocator_type::reference		reference;
 			typedef typename allocator_type::const_reference	const_reference;
 			typedef typename allocator_type::pointer 		pointer;	
-			typedef const T*								const_pointer;
-			typedef random_access_iterator<T>				iterator;
-			typedef random_access_iterator<T const>			const_iterator;
-			typedef reverse_iterator_type<T>		reverse_iterator;
-			typedef reverse_iterator_type<T const>	const_reverse_iterator;
-			typedef size_t							size_type;
+			typedef typename allocator_type::const_pointer 		const_pointer;	
+			typedef normal_iterator<pointer, vector>				iterator;
+			typedef normal_iterator<const_pointer,vector>			const_iterator;
+			typedef _reverse_iterator<pointer>				reverse_iterator;
+			typedef _reverse_iterator<const_pointer>			const_reverse_iterator;
+			typedef size_t									size_type;
+			typedef ptrdiff_t								difference_type;
 
 			vector() : _begin(0), _end(0), _size(0), _size_alloued(0){}
-			vector(unsigned int size, const T& value = value_type()) : _size(size), _size_alloued(size)
+			vector(size_t size, const T& value = value_type()) : _size(size), _size_alloued(size)
 			{
 				if (size > _alloc.max_size())
 					throw (std::bad_alloc());
@@ -57,9 +58,10 @@ namespace ft
 				for (size_type i = 0; _begin + i != _end; i++)
 					_alloc.construct(_begin + i, value);
 			}
-			vector(iterator const& first, iterator const& last)
+			template<class InputIterator>
+			void vector_init(InputIterator first, InputIterator last, __false_type)
 			{
-				_size = (last - first);
+				_size = ft::distance(first, last);
 				if (_size > _alloc.max_size())
 					throw (std::bad_alloc());
 				_begin = _alloc.allocate(_size);
@@ -67,6 +69,12 @@ namespace ft
 				for (size_type i = 0; i < _size; i++)
 					_alloc.construct(_begin + i, *(first + i));
 				_size_alloued = _size;
+			}
+			template<class InputIterator>
+			vector(InputIterator first, InputIterator last, typename ft::enable_if<!ft::__is_integer<InputIterator>::__value>::type * =  NULL)
+			{
+				typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+	  			vector_init(first, last, _Integral());
 			}
 			vector(vector const& cp)
 			{
@@ -106,12 +114,12 @@ namespace ft
 			}
 			reverse_iterator	rbegin()
 			{ 
-				reverse_iterator inter(_end - 1);
+				reverse_iterator inter(_end);
 				return inter;
 			}
 			const_reverse_iterator	rbegin() const
 			{ 
-				const_reverse_iterator inter(_end - 1);
+				const_reverse_iterator inter(_end);
 				return inter;
 			}
 			iterator	end() 
@@ -126,43 +134,53 @@ namespace ft
 			}
 			reverse_iterator	rend() 
 			{ 
-				reverse_iterator inter(_begin - 1);
+				reverse_iterator inter(_begin);
 				return inter;
 			}
 			const_reverse_iterator	rend() const
 			{ 
-				const_reverse_iterator inter(_begin - 1);
+				const_reverse_iterator inter(_begin);
 				return inter;
 			}
 			size_type	size() const { return (_size); }
 			size_type	max_size() const { return (_alloc.max_size()); }
-			void resize (unsigned int n, T val = value_type())
+			void resize (size_type n, T val = value_type())
 			{
+				size_t	old_size = _size;
 				if (n < _size)
 				{
-					_end = _begin + n;
-					for (size_type i = 0; i < _size - n; i++)
-						_alloc.destroy(_end + i);
-					//_alloc.deallocate(_end, 1);
+					pointer	new_begin = _alloc.allocate(n);
+					for (size_type i = 0; i < _size; i++)
+					{
+						if (i < n)
+							new_begin[i] = _begin[i];
+						_alloc.destroy(_begin + i);
+					}
+					_alloc.deallocate(_begin, _size_alloued);
+					_size_alloued = n;
 					_size = n;
+					_begin = new_begin;
+					_end = _begin + n;
 					return ;
 				}	
-				else if (n > _size_alloued)
+				if (n > _size_alloued)
 					up_size(n);
-				else
-					return ;
-				size_t i = 0;
-				for (pointer it = _end - (_size - n); (size_type)i < _size - n; i++, it++)
+				for (pointer it = _begin + old_size; it < _begin + n; it++)
 					*it = val;	
 				_size = n;
 				_end = _begin + n;
 			}
-			unsigned int	capacity() const { return (_size_alloued); }
+			size_type capacity() const { return (_size_alloued); }
 			bool			empty() const { return (_size == 0 ? true : false); }
 			void			reserve(unsigned int n)
 			{
 				if (n > _size_alloued)
+				{
+					size_type	old_size = _size;
 					up_size_to(n);
+					_size = old_size;
+					_end = _begin + _size;
+				}
 			}
 			reference	operator[](size_type n)
 			{
@@ -184,21 +202,6 @@ namespace ft
 			const_reference	front() const { return (*_begin); }
 			reference	back() { return (*(_end - 1)); }
 			const_reference	back() const { return (*(_end - 1)); }
-			void assign (iterator first, iterator last)
-			{
-				size_type inter_size = (last - first);
-				if (inter_size > _alloc.max_size())
-					throw (std::bad_alloc());
-				if(inter_size > _size_alloued)
-					up_size(inter_size);
-				else
-				{
-					_size = inter_size;
-					_end = _begin + inter_size;
-				}
-				for (unsigned int i = 0; first != last; i++)
-					_begin[i] = *(first++);
-			}
 			void assign (size_type n, const T& val)
 			{
 				if (n > _alloc.max_size())
@@ -212,6 +215,28 @@ namespace ft
 					_size = n;
 					_end = _begin + n;
 				}
+			}
+			template<class InputIterator>
+			void _assign (InputIterator first, InputIterator last, __false_type)
+			{
+				size_type inter_size = ft::distance(first, last);
+				if (inter_size > _alloc.max_size())
+					throw (std::bad_alloc());
+				if(inter_size > _size_alloued)
+					up_size(inter_size);
+				else
+				{
+					_size = inter_size;
+					_end = _begin + inter_size;
+				}
+				for (unsigned int i = 0; first != last; i++, first++)
+					_begin[i] = *(first);
+			}
+			template<class InputIterator>
+			void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::__is_integer<InputIterator>::__value>::type * =  NULL)
+			{
+				typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+	  			_assign(first, last, _Integral());
 			}
 			void push_back(const T& val)
 			{
@@ -273,9 +298,10 @@ namespace ft
 				_begin[i] = val;
 		}
 		//TO CHECK
-    	void insert (iterator position, iterator first, iterator last)
+      	template<typename InputIterator>
+    	void _insert (iterator position, InputIterator first, InputIterator last, __false_type)
 		{
-			size_type		n = last - first;
+			size_type		n = ft::distance(first, last);
 			unsigned int	pos = position - iterator(_begin);
 
 			if (_size + n >= _size_alloued)
@@ -292,6 +318,12 @@ namespace ft
 				*i = *(i - n);
 			for (size_type i = pos; i < pos + n; i++, first++)
 				_begin[i] = *first;
+		}
+      	template<typename InputIterator>
+    	void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::__is_integer<InputIterator>::__value>::type * =  NULL)
+		{
+			typedef typename ft::__is_integer<InputIterator>::__type _Integral;
+  			_insert(position, first, last, _Integral());
 		}
 		iterator erase (iterator position)
 		{
@@ -412,13 +444,13 @@ namespace ft
 			allocator_type	_alloc;
 			pointer			_begin;
 			pointer			_end;
-			unsigned int 	_size;
-			unsigned int	_size_alloued;
+			size_type 	_size;
+			size_type	_size_alloued;
 	};
 	template<class T>
 	bool	is_equal(T& a, T&b) { return (a == b); }
 	template <class iterator1, class iterator2>
-	bool lexicographical_compare (iterator1 first1, iterator1 last1, iterator2 first2, iterator2 last2)
+	bool _lexicographical_compare (iterator1 first1, iterator1 last1, iterator2 first2, iterator2 last2)
 	{
 		while (first1!=last1)
 		{
@@ -446,8 +478,7 @@ namespace ft
 	template<class T>
 	bool	operator<(const vector<T>& v1, const vector<T>& v2)
 	{
-		return (lexicographical_compare(	random_access_iterator<T>(v1._begin), random_access_iterator<T>(v1._end),\
-										 	random_access_iterator<T>(v2._begin), random_access_iterator<T>(v2._end)));
+		return (_lexicographical_compare(v1.begin(), v1.end(),v2.begin(), v2.end()));
 	}
 	template<class T>
 	bool	operator<=(const vector<T>& v1, const vector<T>& v2)

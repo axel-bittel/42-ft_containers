@@ -1,6 +1,6 @@
 #include "common.hpp"
 
-#define TESTED_TYPE foo<int>
+#define TESTED_TYPE int
 #define t_stack_ TESTED_NAMESPACE::stack<TESTED_TYPE>
 typedef t_stack_::container_type container_type;
 
