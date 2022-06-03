@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 14:06:30 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/01 20:56:35 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/03 02:06:54 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,29 +60,22 @@ namespace ft
       operator--(int) 
       { return normal_iterator(_M_current--); }
 
-      // Random access iterator requirements
-      reference
-      operator[](difference_type n) const 
+      reference operator[](difference_type n) const 
       { return _M_current[n]; }
 
-      normal_iterator&
-      operator+=(difference_type n) 
+      normal_iterator& operator+=(difference_type n) 
       { _M_current += n; return *this; }
 
-      normal_iterator
-      operator+(difference_type n) const 
+      normal_iterator operator+(difference_type n) const 
       { return normal_iterator(_M_current + n); }
 
-      normal_iterator&
-      operator-=(difference_type n) 
+      normal_iterator& operator-=(difference_type n) 
       { _M_current -= n; return *this; }
 
-      normal_iterator
-      operator-(difference_type n) const 
+      normal_iterator operator-(difference_type n) const 
       { return normal_iterator(_M_current - n); }
 
-      const _Iterator&
-      base() const 
+      const _Iterator& base() const 
       { return _M_current; }
     };
   template<class InputIterator>
@@ -370,21 +363,4 @@ template<typename _Iterator>
   operator+(typename _reverse_iterator<_Iterator>::difference_type __n,
 	      const _reverse_iterator<_Iterator>& __x)
     { return _reverse_iterator<_Iterator>(__x.base() - __n); }
-   //General Iterator
-  template<typename Input1>
-    inline typename Input1::difference_type
-    operator-(const Input1& __x,
-	      const Input1& __y)
-    { return __y - __x; }
-  template<typename Input1>
-    inline typename Input1::difference_type
-    operator+(const Input1& __x,
-	      const Input1& __y)
-    { return __y + __x; }
-  template<typename Input1>
-    Input1 operator+(const Input1& __x, typename Input1::difference_type n)
-    { return __x + n; }
-  template<typename Input1>
-    Input1 operator-(const Input1& __x, typename Input1::difference_type n)
-    { return __x - n; }
 };

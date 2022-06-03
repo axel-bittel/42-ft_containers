@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 22:56:54 by abittel           #+#    #+#             */
-/*   Updated: 2022/05/31 23:27:44 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/02 01:08:48 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ namespace ft
 template<class T, class Cont = vector<T> >
 class stack 
 {
-	private:
+	protected:
 		Cont	_cont;
 	public:
 		typedef	typename Cont::size_type	size_type;
@@ -47,6 +47,36 @@ class stack
 		{
 			_cont.pop_back();
 		}
+		template<class _T, class _Container>
+		friend bool operator== (const stack<_T, _Container>& lhs, const stack<_T,_Container>& rhs)
+		{
+			return (lhs._cont == rhs._cont);
+		}
+		template<class _T, class _Container>
+		friend bool operator!= (const stack<_T,_Container>& lhs, const stack<_T,_Container>& rhs)
+		{
+			return (lhs._cont != rhs._cont);
+		}
+		template<class _T, class _Container>
+		friend bool operator<  (const stack<_T,_Container>& lhs, const stack<_T,_Container>& rhs)
+		{
+			return (lhs._cont < rhs._cont);
+		}
+		template<class _T, class _Container>
+		friend bool operator<= (const stack<_T,_Container>& lhs, const stack<_T,_Container>& rhs)
+		{
+			return (lhs._cont <= rhs._cont);
+		}
+		template<class _T, class _Container>
+		friend bool operator> (const stack<_T,_Container>& lhs, const stack<_T,_Container>& rhs)
+		{
+			return (lhs._cont > rhs._cont);
+		}
+		template<class _T, class _Container>
+		friend bool operator>= (const stack<_T,_Container>& lhs, const stack<_T,_Container>& rhs)
+		{
+			return (lhs._cont >= rhs._cont);
+		}
 };
 
-};
+}

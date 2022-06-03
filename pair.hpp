@@ -6,18 +6,12 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 00:02:04 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/02 00:12:56 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/03 00:58:24 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 namespace ft
 {
-
-template <class T1,class T2>
-pair<T1,T2> make_pair (T1 x, T2 y)
-{
-	return ( pair<T1,T2>(x,y) );
-}
 
 template <class T1, class T2> 
 class pair	
@@ -38,6 +32,10 @@ class pair
 		first_type	first;
 		second_type second;
 };
+
+template <class T1,class T2>
+pair<T1,T2> make_pair (T1 x, T2 y)
+{ return ( pair<T1,T2>(x,y) ); }
 
 template <class T1, class T2>
 bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)

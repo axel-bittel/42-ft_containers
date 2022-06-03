@@ -6,11 +6,13 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/01 17:25:54 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/03 02:03:27 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <vector>
+#include <map>
+#include <list>
 #include <iostream>
 #include <fstream>
 #include <iterator>
@@ -49,7 +51,8 @@ int	main()
 		std::vector<int> v1(3, 1);
 		std::vector<int>::iterator test = v1.begin();
 		std::vector<int>::reverse_iterator test2(v1);
-
+		std::map<int, int> test;
+		std::list<int>::iterator test;
 		std::cout << v1.size() << "/" << v1.capacity() << &(*v1.begin()) << std::endl;
 		std::cout << v1.size() << "/" << v1.capacity() << &(*v1.begin()) << std::endl;
 		/*for (int i = 0; i < 1; i++)

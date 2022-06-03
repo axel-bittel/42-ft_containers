@@ -67,7 +67,7 @@ namespace ft
 				_begin = _alloc.allocate(_size);
 				_end = _begin + _size;
 				for (size_type i = 0; i < _size; i++)
-					_alloc.construct(_begin + i, *(first + i));
+					_alloc.construct(_begin + i, *(first++));
 				_size_alloued = _size;
 			}
 			template<class InputIterator>
