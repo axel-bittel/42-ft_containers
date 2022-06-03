@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 00:02:04 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/03 00:58:24 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/03 18:40:21 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,14 @@ class pair
 		pair (const first_type& a, const second_type& b) : first(a), second(b) {}
 		pair& operator= (const pair& pr)
 		{
-			fist = pr.first;
-			second = pr.second;
+			this->first = pr.first;
+			this->second = pr.second;
 		}
-	private:
 		first_type	first;
 		second_type second;
 };
+
+
 
 template <class T1,class T2>
 pair<T1,T2> make_pair (T1 x, T2 y)
