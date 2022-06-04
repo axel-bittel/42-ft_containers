@@ -6,19 +6,23 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 00:02:04 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/03 18:40:21 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/04 20:12:34 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
+#include "iterator.hpp"
 namespace ft
 {
-
 template <class T1, class T2> 
 class pair	
 {
+	private:
+		iterator_traits<T2*>	_traits;
 	public:
 		typedef	T1	first_type;
 		typedef	T2	second_type;
+
 		pair() : first(T1()), second(T2()){}
 		template<class U, class V> 
 		pair (const pair<U,V>& pr) : first(pr.first), second(pr.second){}
@@ -27,12 +31,11 @@ class pair
 		{
 			this->first = pr.first;
 			this->second = pr.second;
+			return *this;
 		}
 		first_type	first;
 		second_type second;
 };
-
-
 
 template <class T1,class T2>
 pair<T1,T2> make_pair (T1 x, T2 y)

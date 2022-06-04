@@ -6,10 +6,11 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 14:06:30 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/03 02:06:54 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/04 17:26:44 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
 #include "utils.hpp"
 namespace ft 
 {
