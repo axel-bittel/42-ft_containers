@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: me <me@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/04 23:33:06 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/10 21:36:37 by me               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,14 @@ int	main()
 	for (ft::Tree<int, std::string>::iterator it = t.begin(); it != t.end(); it++)
 		std::cout << (*it).first << std::endl;
 	std::cout << ((((--(m.end())))))->first<< std::endl;
+	std::cout << m.size() << std::endl;
+	std::cout << m[900] << std::endl;
+	std::cout << m.size() << std::endl;
+	m[900] = 100;
+	std::cout << m.size() << std::endl;
+	std::cout << m[900] << std::endl;
+	std::cout << m.size() << std::endl;
+
 	/*m.insert(std::make_pair(1, 1));
 	m.insert(std::make_pair(2, 1));
 	m.insert(std::make_pair(2, 2));

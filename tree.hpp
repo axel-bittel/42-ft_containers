@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tree.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: me <me@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 00:09:49 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/05 01:37:27 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/10 21:27:18 by me               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,24 @@ namespace ft
 	class RBIterator
 	{
 		private:
-			T*	_current;
-			Tree*	_tree;
+			T	_current;
+			const Tree*	_tree;
 		public:
 			typedef T 												iterator_type;
-			typedef	typename iterator_traits<T*>::reference			reference;
-			typedef	typename iterator_traits<T*>::pointer			pointer;
+			typedef	typename iterator_traits<T>::reference			reference;
+			typedef	typename iterator_traits<T>::pointer			pointer;
+			typedef	typename iterator_traits<T>::value_type			value_type;
 			typedef	bidirectional_iterator_tag						iterator_category;
 
-			RBIterator() : _current(NULL), _tree(NULL) {}
-			RBIterator(const T* current, Tree* tree) : _current(current), _tree(tree) {}
+			RBIterator() : _current(T()), _tree(NULL) {}
+			explicit	RBIterator(const T val, const Tree* tree = NULL) : _current(val), _tree(tree){}
+			RBIterator(const RBIterator<Tree, T, Key, Value>& cp) : _current(cp._current), _tree(cp._tree) {}
 			template<class _T>
-			RBIterator(const RBIterator<Tree, _T, Key, Value>& cp) : _current(cp._current), _tree(cp._tree) {}
+			RBIterator(RBIterator<Tree, _T, Key, Value>& cp) : _current(cp._current), _tree(cp._tree) {}
 			const	ft::pair<Key, Value>&	operator*() const
 			{	return (this->_current->_value);}
 			ft::pair<Key, Value>*	operator->() const
-			{	return &(this->_current->_value);}
+			{	return const_cast<ft::pair<Key, Value>* >(&(_current->_value));}
 			const RBIterator<Tree, T, Key, Value>&	operator=(const RBIterator<Tree, T, Key, Value>& cp)
 			{	this->_current = cp._current; this->_tree = cp._tree; return *(this); }
 			bool	operator==(const RBIterator&	cp) const
@@ -51,12 +53,12 @@ namespace ft
 				if (this->_current == _tree->_nullNode) 
 					_current = _tree->maxTree(_tree->_root);
 				else
-					_current = (_tree->next(_current)); 
+					_current = _tree->next(_current); 
 				return *(this); 
 			}
 			RBIterator	operator++(int)
 			{ 	
-				RBIterator inter = *this;
+				RBIterator inter (*this);
 				if (this->_current == _tree->_nullNode)
 					_current = _tree->maxTree(_tree->_root);
 				else
@@ -71,7 +73,7 @@ namespace ft
 					_current = (_tree->previous(_current)); 
 				return *(this); 
 			}
-			RBIterator&	operator--(int)
+			RBIterator	operator--(int)
 			{ 
 				RBIterator inter (*this);
 				if (this->_current == _tree->minTree(_tree->_root))
@@ -266,9 +268,9 @@ namespace ft
 				insertFixUp(node);
 				return (node);
 			}
-			void	fixDelete(Node<ft::pair<Key, T>>*	node)
+			void	fixDelete(Node<ft::pair<Key, T> >*	node)
 			{
-				Node<ft::pair<Key, T>>*	s;
+				Node<ft::pair<Key, T> >*	s;
 				while (node != this->_root && node->_color == BLACK)
 				{
 					if (node == node->_parent->_left)
@@ -336,7 +338,7 @@ namespace ft
 				}
 				node->_color = BLACK;
 			}
-			void	change_parents(Node<ft::pair<Key, T>>* change, Node<ft::pair<Key, T>>* cmp)
+			void	change_parents(Node<ft::pair<Key, T> >* change, Node<ft::pair<Key, T> >* cmp)
 			{
 				if (change->_parent == NULL)
 					this->_root = cmp;
@@ -346,11 +348,11 @@ namespace ft
 					change->_parent->_right = cmp;
 				cmp->_parent = change->_parent;
 			}
-			void	_delete(Node<ft::pair<Key, T>>*	node, Key keyDelete)
+			void	_delete(Node<ft::pair<Key, T> >*	node, Key keyDelete)
 			{
-				Node<ft::pair<Key, T>>* find = _nullNode;
-				Node<ft::pair<Key, T>>* x;
-				Node<ft::pair<Key, T>>* y;
+				Node<ft::pair<Key, T> >* find = _nullNode;
+				Node<ft::pair<Key, T> >* x;
+				Node<ft::pair<Key, T> >* y;
 				while (node != _nullNode)
 				{
 					if (node->_value.first == keyDelete)
@@ -399,9 +401,9 @@ namespace ft
 			}
 			void	freeTree(Node<ft::pair<Key, T> >* node)
 			{
-				if (node->_left != nullptr)
+				if (node->_left != _nullNode)
 					freeTree(node->_left);
-				if (node->_right != nullptr)
+				if (node->_right != _nullNode)
 					freeTree(node->_right);
 				if (node != _nullNode)
 					delete node;
@@ -409,26 +411,23 @@ namespace ft
 		public:
 			Node<ft::pair<Key, T> >*	_root;
 			Node<ft::pair<Key, T> >*	_nullNode;
-			typedef	RBIterator<Tree, Node<ft::pair<Key, T>>, Key, T>		iterator;
-			typedef	RBIterator<Tree, const Node<ft::pair<Key, T>>, Key, T>	const_iterator;
+			typedef	RBIterator<Tree, Node<ft::pair<Key, T> >*, Key, T>		iterator;
+			typedef	RBIterator<Tree, const Node<ft::pair<Key, T> >*, Key, T>	const_iterator;
 			typedef	size_t													size_type;
 			typedef	ptrdiff_t												difference_type;
 			Tree() : _size(0), _nullNode(get_NullNode())
 			{ _root = _nullNode; }
 			~Tree()
 			{
-				freeTree(this->_root); 
-				delete _nullNode;
+				if (_size)
+					clear();
+				delete	_nullNode;
 			}
 			Tree*	operator->()
 			{	return this;	}
 			//BASE OPERATION
 			Node<ft::pair<Key, T> >*	search(Key key)
 			{ return (_searchTree(this->_root, key)); }
-			/*Key&	search_key(Key key)
-			{ return (_searchTree(this->_root, key))->_value.first; }
-			T&	search_value(Key key)
-			{ return (_searchTree(this->_root, key))->_value.second; }*/
 			iterator insert(Key key, T value)
 			{
 				Node<ft::pair<Key, T> >*	node = new Node<ft::pair<Key, T> >;
@@ -453,23 +452,27 @@ namespace ft
 			{	return (_count(key, this->_root));	}
 			void	clear()
 			{
-				freeTree();
+				if (this->_root == _nullNode)
+					return ;
+				freeTree(this->_root);
 				this->_root = _nullNode;
+				_nullNode->_value.first = 0;
 				this->_size = 0;
 			}
-			Node<ft::pair<Key, T> >*	minTree(Node<ft::pair<Key, T> >* node)
+			Node<ft::pair<Key, T> >*	minTree(Node<ft::pair<Key, T> >* node) const
 			{
 				while (node->_left != this->_nullNode)
 					node = node->_left;
 				return(node);
 			}	
-			Node<ft::pair<Key, T> >*	maxTree(Node<ft::pair<Key, T> >* node)
+			Node<ft::pair<Key, T> >*	maxTree(Node<ft::pair<Key, T> >* node) const
 			{
 				while (node->_right != this->_nullNode)
 					node = node->_right;
 				return(node);
 			}
-			Node<ft::pair<Key, T> >*		next(Node<ft::pair<Key, T> >* act)
+			template<class _T>
+			_T*		next(_T* act) const
 			{
 				Node<ft::pair<Key, T> >*	inter;
 				if (act == maxTree(this->_root))
@@ -497,7 +500,8 @@ namespace ft
 				}
 				return act;
 			}
-			Node<ft::pair<Key, T>>*		previous(Node<ft::pair<Key, T>>* act)
+			template<class _T>
+			_T*		previous(_T* act) const 
 			{
 				if (act == _nullNode)
 					return (maxTree(this->_root));
@@ -514,19 +518,70 @@ namespace ft
 			}
 			iterator	begin()
 			{
-				return (iterator(minTree(this->_root), this));
+				if (_root == _nullNode)
+					return (iterator());
+				iterator it = iterator(minTree(this->_root), this);
+				return (it);
 			}
 			const_iterator	begin() const
 			{
-				return (const_iterator(minTree(this->_root), this));
+				if (_root == _nullNode)
+					return (const_iterator());
+				const_iterator	it = const_iterator(minTree(this->_root), this);
+				return (it);
 			}
 			iterator	end()
 			{
-				return (iterator(_nullNode, this));
+				if (_root == _nullNode)
+					return (iterator());
+				iterator	it = iterator(_nullNode, this);
+				return (it);
 			}
 			const_iterator	end() const
 			{
-				return (const_iterator(_nullNode, this));
+				if (_root == _nullNode)
+					return (const_iterator());
+				const_iterator	it = const_iterator(_nullNode, this);
+				return (it);
+			}
+			Node<ft::pair<Key, T> >*	_copyNode(Node<ft::pair<Key, T> >* node, Node<ft::pair<Key, T> >* null, Node<ft::pair<Key, T> >* _currentNode)
+			{
+				if (node == null)
+					return node;
+				Node<ft::pair<Key, T> >*	nNode = new Node<ft::pair<Key, T> >;	
+				//Insert new values
+				if (_currentNode == _root)
+				{
+					_root = nNode;
+					_currentNode = _root;
+				}
+				else
+					_currentNode = nNode;
+				if (node->_left != null)
+				{
+					_currentNode->_left = _copyNode(node->_left, null, _currentNode->_left);
+					_currentNode->_left->_parent = _currentNode;
+				}
+				else
+					_currentNode->_left = _nullNode;
+				if (node->_right != null)
+				{
+					_currentNode->_right = _copyNode(node->_right, null, _currentNode->_right);
+					_currentNode->_right->_parent = _currentNode;
+				}
+				else
+					_currentNode->_right = _nullNode;
+				_currentNode->_color = node->_color;
+				_currentNode->_value = node->_value;
+				return _currentNode;
+			}
+			Tree&	operator=(const Tree&	cp)
+			{
+				if (_size)
+					clear();
+				this->_size = cp._size;
+				_copyNode(cp._root, cp._nullNode, this->_root);	
+				return (*this);
 			}
 			void	print_tree(Node<ft::pair<Key, T> >*	node = NULL, int num = 0)
 			{
