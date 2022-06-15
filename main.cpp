@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: me <me@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/10 21:36:37 by me               ###   ########.fr       */
+/*   Updated: 2022/06/14 10:00:54 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 int	main()
 {	
-	std::map<int, int> m;
+	/*std::map<int, int> m;
 	std::pair<int, int> test2;
 	ft::Tree<int, std::string> t;
 	t.insert(3, "10");
@@ -54,8 +54,13 @@ int	main()
 	m[900] = 100;
 	std::cout << m.size() << std::endl;
 	std::cout << m[900] << std::endl;
-	std::cout << m.size() << std::endl;
-
+	std::cout << m.size() << std::endl;*/
+	std::allocator<int>	_alloc;
+	int*	one = _alloc.allocate(1);
+	_alloc.construct(one, 1);
+	int*	two = _alloc.allocate(1);
+	_alloc.construct(two, 1);
+	std::cout << one << "/" << two << std::endl;
 	/*m.insert(std::make_pair(1, 1));
 	m.insert(std::make_pair(2, 1));
 	m.insert(std::make_pair(2, 2));
