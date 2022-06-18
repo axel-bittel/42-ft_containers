@@ -447,19 +447,7 @@ namespace ft
 			size_type 	_size;
 			size_type	_size_alloued;
 	};
-	template<class T>
-	bool	is_equal(T& a, T&b) { return (a == b); }
-	template <class iterator1, class iterator2>
-	bool _lexicographical_compare (iterator1 first1, iterator1 last1, iterator2 first2, iterator2 last2)
-	{
-		while (first1!=last1)
-		{
-			if (first2==last2 || *first2<*first1) return false;
-			else if (*first1<*first2) return true;
-			++first1; ++first2;
-		}
-		return (first2!=last2);
-	}
+	
 	template<class T>
 	bool	operator==(const vector<T>& v1, const vector<T>& v2)
 	{

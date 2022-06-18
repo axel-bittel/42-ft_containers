@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/14 10:00:54 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/17 20:47:18 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 
 int	main()
 {	
-	/*std::map<int, int> m;
+	std::map<int, int> m;
+	std::map<int, int>::reverse_iterator r;
 	std::pair<int, int> test2;
 	ft::Tree<int, std::string> t;
 	t.insert(3, "10");
