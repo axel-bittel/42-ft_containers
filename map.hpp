@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 01:21:48 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/18 20:25:09 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/24 13:21:11 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 namespace ft
 {
 
-template < class Key, class T,  class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > > 
+template < class Key, class T,  class Compare = ft::less<Key>, class Alloc = std::allocator<ft::pair<const Key,T> > > 
 class map
 {
 	
@@ -24,7 +24,7 @@ class map
 		typedef Key											key_type;
 		typedef	T											mapped_type;
 		typedef	ft::pair<const key_type, mapped_type>		value_type;
-		class value_compare : public std::binary_function<value_type, value_type,bool>
+		class value_compare : public ft::binary_function<value_type, value_type,bool>
 		{   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
 		 	friend class map;
 			protected:
@@ -154,7 +154,6 @@ class map
 				_tree->destroy(k);
 			}
 		}
-		void swap (map& x)
 		{
 			tree_type*	inter;
 			inter = this->_tree;

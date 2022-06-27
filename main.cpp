@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/21 15:45:02 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/17 20:47:18 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/24 13:15:25 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,27 @@
 //#include <chrono>
 #include "map.hpp"
 
+class A
+{
+	public:
+	A() : test(0), test2(1) {}
+	A(int _t) : test(_t), test2(1) {}
+	A(const A& cp) : test(cp.test), test2(cp.test2) {}
+	~A(){}
+	friend std::ostream& operator<<(std::ostream& os, const A& t)
+	{
+		os << t.test << "/" << t.test2;
+		return (os);
+	}
+	bool operator<(const A& t) const
+	{	return (test < t.test);	}
+	int test;
+	int test2;
+};
+
 int	main()
 {	
-	std::map<int, int> m;
+	std::map<A, int> m;
 	std::map<int, int>::reverse_iterator r;
 	std::pair<int, int> test2;
 	ft::Tree<int, std::string> t;
@@ -34,34 +52,26 @@ int	main()
 	t.insert(-42, "40");
 	t.insert(75, "40");
 	t.insert(2, "40");
-	t.print_tree();
-	m.insert(std::make_pair(3, 1));
-	m.insert(std::make_pair(5, 2));
-	m.insert(std::make_pair(4, 1));
-	m.insert(std::make_pair(1, 1));
-	m.insert(std::make_pair(-42, 1));
-	m.insert(std::make_pair(75, 1));
-	m.insert(std::make_pair(75, 2));
-	m.insert(std::make_pair(2, 1));
-	ft::Tree<int, std::string>::iterator	it;
-	it = t.begin();
-	it++;
-	for (ft::Tree<int, std::string>::iterator it = t.begin(); it != t.end(); it++)
-		std::cout << (*it).first << std::endl;
-	std::cout << ((((--(m.end())))))->first<< std::endl;
-	std::cout << m.size() << std::endl;
-	std::cout << m[900] << std::endl;
-	std::cout << m.size() << std::endl;
-	m[900] = 100;
-	std::cout << m.size() << std::endl;
-	std::cout << m[900] << std::endl;
-	std::cout << m.size() << std::endl;*/
-	std::allocator<int>	_alloc;
-	int*	one = _alloc.allocate(1);
-	_alloc.construct(one, 1);
-	int*	two = _alloc.allocate(1);
-	_alloc.construct(two, 1);
-	std::cout << one << "/" << two << std::endl;
+	//t.print_tree();
+	/*m.insert(std::make_pair("3", 1));
+	m.insert(std::make_pair("5", 2));
+	m.insert(std::make_pair("4", 1));
+	m.insert(std::make_pair("1", 1));
+	m.insert(std::make_pair("-42", 1));
+	m.insert(std::make_pair("75", 1));
+	m.insert(std::make_pair("75", 2));
+	m.insert(std::make_pair("2", 1));*/
+	m.insert(std::make_pair(A(3), 1));
+	m.insert(std::make_pair(A(5), 2));
+	m.insert(std::make_pair(A(4), 1));
+	m.insert(std::make_pair(A(1), 1));
+	m.insert(std::make_pair(A(-42), 1));
+	m.insert(std::make_pair(A(75), 1));
+	m.insert(std::make_pair(A(75), 2));
+	m.insert(std::make_pair(A(2), 1));
+	for (std::map<A, int>::iterator it = m.begin(); it != m.end(); it++)
+		std::cout << it->first << std::endl;
+	std::cout << m.end()->first  << "|" << m.end()->second << std::endl;
 	/*m.insert(std::make_pair(1, 1));
 	m.insert(std::make_pair(2, 1));
 	m.insert(std::make_pair(2, 2));

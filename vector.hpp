@@ -48,8 +48,8 @@ namespace ft
 			typedef size_t									size_type;
 			typedef ptrdiff_t								difference_type;
 
-			vector() : _begin(0), _end(0), _size(0), _size_alloued(0){}
-			vector(size_t size, const T& value = value_type()) : _size(size), _size_alloued(size)
+			vector (const allocator_type& alloc = allocator_type()) : _alloc(alloc), _begin(0), _end(0), _size(0), _size_alloued(0) {}
+			vector(size_t size, const T& value = value_type(), const allocator_type& alloc = allocator_type() ) :  _alloc(alloc), _size(size), _size_alloued(size)
 			{
 				if (size > _alloc.max_size())
 					throw (std::bad_alloc());
@@ -182,11 +182,11 @@ namespace ft
 					_end = _begin + _size;
 				}
 			}
-			reference	operator[](size_type n)
+			reference	operator[](size_type n) const
 			{
 				return (_begin[n]);
 			}
-			reference	at(size_type n)
+			reference	at(size_type n) 
 			{
 				if (n > _size || n < 0)
 					throw std::out_of_range("vector:Out of the vector.");

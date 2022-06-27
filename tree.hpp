@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 00:09:49 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/18 20:23:05 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/24 13:17:20 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace ft
 	#define	BLACK	0
 	#define	RED		1
 	
-	template<class Key, class T,  class Compare = std::less<Key> >
+	template<class Key, class T,  class Compare = ft::less<Key> >
 	class Tree;
 
 	template<class T>
@@ -759,7 +759,7 @@ namespace ft
 				_min = minTree(_root);
 				return (*this);
 			}
-			void	print_tree(Node<ft::pair<Key, T> >*	node = NULL, int num = 0) const
+			/*void	print_tree(Node<ft::pair<Key, T> >*	node = NULL, int num = 0) const
 			{
 				if (node == NULL)
 					node = this->_root;
@@ -769,7 +769,7 @@ namespace ft
 					print_tree(node->_left, num + 1);
 					print_tree(node->_right, num + 1);
 				}
-			}
+			}*/
 		friend bool	operator==(Tree& t1, Tree& t2)
  	   {	
 			return 	t1.size() == t2.size()	&& 

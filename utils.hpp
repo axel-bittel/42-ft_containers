@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 18:43:03 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/18 19:46:59 by abittel          ###   ########.fr       */
+/*   Updated: 2022/06/24 13:17:12 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,24 @@
 
 namespace ft
 {
+	template<typename _Arg1, typename _Arg2, typename _Result>
+    struct binary_function
+    {
+      /// @c first_argument_type is the type of the first argument
+      typedef _Arg1 	first_argument_type; 
+
+      /// @c second_argument_type is the type of the second argument
+      typedef _Arg2 	second_argument_type;
+
+      /// @c result_type is the return type
+      typedef _Result 	result_type;
+    };
+	template<typename _Tp>
+    struct less : public binary_function<_Tp, _Tp, bool>
+    {
+      bool operator()(const _Tp& __x, const _Tp& __y) const
+      { return __x < __y; }
+    };
 	struct __true_type { };
  	struct __false_type { };
 	 //ENABLE_IF
