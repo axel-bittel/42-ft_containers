@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/12 20:27:36 by abittel           #+#    #+#             */
-/*   Updated: 2022/07/12 21:55:21 by abittel          ###   ########.fr       */
+/*   Updated: 2022/07/13 00:22:00 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int main()
         std::cout << "t:" << i << std::endl;
         map_ft.insert(map_ft.begin(), std::to_string(i));
         std::cout << "u:" << i << std::endl;
-        map_ft.back();
+        /*map_ft.back();
         map_ft.capacity();
         map_ft.empty();
         map_ft.front();
@@ -37,7 +37,7 @@ int main()
         map_ft.push_back(std::to_string(i));
         map_ft.size();
         map_ft.swap(map_ft2);
-        map_ft2.swap(map_ft);
+        map_ft2.swap(map_ft);*/
         std::cout << "t:" << i << std::endl;
     }
     std::cout << "bite" << std::endl;
