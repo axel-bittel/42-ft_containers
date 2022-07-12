@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 01:21:48 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/24 13:21:11 by abittel          ###   ########.fr       */
+/*   Updated: 2022/07/12 19:56:11 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,7 @@ class map
 				_tree->destroy(k);
 			}
 		}
+		void swap (map& x)
 		{
 			tree_type*	inter;
 			inter = this->_tree;

@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 00:09:49 by abittel           #+#    #+#             */
-/*   Updated: 2022/06/24 13:17:20 by abittel          ###   ########.fr       */
+/*   Updated: 2022/07/12 19:51:41 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -594,7 +594,7 @@ namespace ft
 				node->_min = &_min;
 				iterator	it(_insert(node));
 				_size++;
-				_nullNode->_value.first = _size;
+				//_nullNode->_value.first = _size;
 				return (it);
 			}
 			void	destroy(Key key)
@@ -605,7 +605,7 @@ namespace ft
 					_min = next(_min);
 				_delete(this->_root, key);
 				_size--;
-				_nullNode->_value.first = _size;
+				//_nullNode->_value.first = _size;
 			}
 			//NEW OPERATION
 			size_t	size() const
@@ -618,7 +618,7 @@ namespace ft
 					return ;
 				freeTree(this->_root);
 				this->_root = _nullNode;
-				_nullNode->_value.first = 0;
+				//_nullNode->_value.first = 0;
 				this->_size = 0;
 			}
 			Node<ft::pair<Key, T> >*	minTree(Node<ft::pair<Key, T> >* node) const
