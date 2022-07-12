@@ -278,7 +278,7 @@ namespace ft
 			for (pointer i = _begin + _size - 1; i >= p_pos && i != _begin; i--)
 			{
 				*i = *(i - 1);
-				std::cout << *i << std::endl;
+				//std::cout << *i << std::endl;
 			}
 			/*for (unsigned int i = _size - 1; i >= pos && i > 0; i--)
 			{
@@ -342,6 +342,7 @@ namespace ft
 			for (pointer i = &(*position); i != _end; i++)
 				*(i) = *(i + 1);
 			_alloc.destroy(_end);
+			_alloc.construct(_end, value_type());
 			return iterator(_begin + n);
 		}
 		iterator erase (iterator first, iterator last)
