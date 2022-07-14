@@ -1,5 +1,5 @@
 size: 5
-max_size: 144115188075855871
+max_size: 288230376151711743
 
 Content is:
 - key: a | value: 7

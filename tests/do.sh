@@ -8,4 +8,7 @@ c++ ../test_vector.cpp -I../
 echo "Time test : Map"
 c++ ../test_map.cpp -I../
 ./a.out
+echo "Time test : Stack"
+c++ ../test_stack.cpp -I../
+./a.out
 rm -rf a.out

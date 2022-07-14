@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_map.cpp                                       :+:      :+:    :+:   */
+/*   test_stack.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: me <me@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/12 20:27:36 by abittel           #+#    #+#             */
-/*   Updated: 2022/07/14 20:22:23 by me               ###   ########.fr       */
+/*   Updated: 2022/07/14 20:12:58 by me               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "map.hpp"
-#include <map>
+#include "stack.hpp"
+#include <stack>
 #include <iostream>
 #include <string>
 
@@ -19,45 +19,30 @@
 int main()
 {
     auto begin = std::chrono::high_resolution_clock::now();
-    ft::map<std::string, int>   map_ft;
-    ft::map<std::string, int>   map_ft2;
+    ft::stack<std::string>   map_ft;
 
-    for (int i = 1; i < 1000000; i++)
+    for (int i = 1; i < 1000000 ;i++)
     {
-        map_ft.insert(ft::make_pair<std::string>(std::to_string(i), i));
-        map_ft.find(std::to_string(i));
-        map_ft.count(std::to_string(i));
-        map_ft.empty();
-        map_ft.size();
-        map_ft.begin(); map_ft.end();
-        map_ft.erase(std::to_string(i));
-        map_ft.insert(ft::make_pair<std::string>(std::to_string(i), i));
-        map_ft.swap(map_ft2);
-        map_ft2.swap(map_ft);
+      map_ft.push(std::to_string(i));
+      map_ft.pop();
+      map_ft.push(std::to_string(i));
+      map_ft.size();
+      map_ft.empty();
     }
-    map_ft.erase(map_ft.begin(), map_ft.end());
     auto end = std::chrono::high_resolution_clock::now();
         
     auto begin2 = std::chrono::high_resolution_clock::now();
-    std::map<std::string, int>  map_std;
-    std::map<std::string, int>  map_std2;
+    std::stack<std::string>  map_std;
+    std::stack<std::string>  map_std2;
     for (int i = 1; i < 1000000; i++)
     {
-        map_std.insert(std::make_pair<std::string>(std::to_string(i), i));
-        map_std.find(std::to_string(i));
-        map_std.count(std::to_string(i));
-        map_std.empty();
-        map_std.size();
-        map_std.begin(); map_std.end();
-        map_std.erase(std::to_string(i));
-        map_std.insert(std::make_pair<std::string>(std::to_string(i), i));
-        map_std.swap(map_std2);
-        map_std2.swap(map_std2);
+      map_std.push(std::to_string(i));
+      map_std.pop();
+      map_std.push(std::to_string(i));
+      map_std.size();
     }
-    map_std.erase(map_std.begin(), map_std.end());
     auto end2 = std::chrono::high_resolution_clock::now();
     auto res1 =std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
     auto res2 =std::chrono::duration_cast<std::chrono::nanoseconds>(end2 - begin2);
     std::cout << res1.count() << "/" << res2.count() << " : " << (float)res1.count() / (float)res2.count() << std::endl;
-
 }

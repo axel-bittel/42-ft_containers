@@ -156,6 +156,7 @@ namespace ft
 						if (i < n)
 							new_begin[i] = _begin[i];
 						_alloc.destroy(_begin + i);
+						_alloc.construct(_begin + i, value_type());
 					}
 					_alloc.deallocate(_begin, _size_alloued);
 					_size_alloued = n;
@@ -257,6 +258,7 @@ namespace ft
 					_size--;
 					_end--;
 					_alloc.destroy(_begin + _size);
+					_alloc.construct(_begin + _size, value_type());
 				}
 			}
 
@@ -353,7 +355,10 @@ namespace ft
 			_size -= n;
 			_end -= n;
 			for (pointer i = _end; i != _end + n; i++)
+			{
 				_alloc.destroy(i);
+				_alloc.construct(i, value_type());
+			}
 			return iterator(_begin + (first - iterator(_begin)));
 		}
 		void swap (ft::vector<value_type>& x)
@@ -375,7 +380,10 @@ namespace ft
 		void clear()
 		{
 			for (pointer i = _begin; i != _end; i++)
+			{
 				_alloc.destroy(i);
+				_alloc.construct(i, value_type());
+			}
 			_size = 0;
 			_end = _begin;
 		}
@@ -411,31 +419,6 @@ namespace ft
 				_size = new_size;
 				_end = new_beg + _size;
 			}
-			void	up_size_insert(unsigned int new_size, size_type pos, const value_type& val)
-			{
-				unsigned int new_size_alloued = _size_alloued == 0 ? 1 : _size_alloued;
-				while (new_size_alloued < new_size)
-					new_size_alloued = new_size_alloued << 1;
-				if (new_size_alloued > _alloc.max_size())
-					throw (std::bad_alloc());
-				pointer	new_beg = _alloc.allocate(new_size_alloued);
-				for (size_type old = 0; _begin + old != _end; old++)
-				{
-					if (old >= pos) 
-						_alloc.construct(new_beg + old, _begin[old - 1]);
-					else
-						_alloc.construct(new_beg + old, _begin[old]);
-					_alloc.destroy(_begin + old);
-				}
-				_alloc.construct(new_beg + pos, val);
-				if(_begin)
-					_alloc.deallocate(_begin, _size_alloued);
-				_begin = new_beg;
-				_size_alloued = new_size_alloued;
-				_size = new_size;
-				_end = new_beg + _size;
-			}
-
 			void	up_size_to(unsigned int new_capacity, bool copy_old = true)
 			{
 				if (new_capacity > _alloc.max_size())
@@ -443,10 +426,15 @@ namespace ft
 				pointer	new_beg = _alloc.allocate(new_capacity);
 				if (copy_old)
 				{
-					for (size_type old = 0; _begin + old != _end; old++)
+					for (size_type old = 0; new_beg + old != new_beg + new_capacity; old++)
 					{
-						_alloc.construct(new_beg + old, _begin[old]);
-						_alloc.destroy(_begin + old);
+						if (_begin + old != _end && _begin != NULL)
+						{
+							_alloc.construct(new_beg + old, _begin[old]);
+							_alloc.destroy(_begin + old);
+						}
+						else
+							_alloc.construct(new_beg + old, value_type());
 					}
 				}
 				if (_begin)
