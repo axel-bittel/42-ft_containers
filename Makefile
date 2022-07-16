@@ -6,30 +6,32 @@
 #    By: abittel <abittel@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/18 10:24:03 by abittel           #+#    #+#              #
-#    Updated: 2022/07/16 17:18:56 by abittel          ###   ########.fr        #
+#    Updated: 2022/07/16 19:58:03 by abittel          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS_TEST    =  test.cpp
-SRCS_TIME    =  test_time.cpp
+SRCS_TEST    =  tests/test.cpp
+SRCS_TIME    =  tests/test_time.cpp
 OSRCS_TEST   =  ${SRCS_TEST:.cpp=.o}
 OSRCS_TIME   =  ${SRCS_TIME:.cpp=.o}
 NAME_TEST_FT =  test_ft
 NAME_TEST_STD = test_std
 NAME_TIME =     test_time
 
-all : ${NAME}
+all : ${NAME_TIME} ${NAME_TEST_FT} ${NAME_TEST_STD} 
 
 %.o: %.cpp 
-        c++ -Wall -Werror -Wextra -std=c++98 -c $< -o ${<:.cpp=.o}
-${NAME} :       ${OSRCS_TEST} ${OSRCS_TIME}
-        c++ -Wall -Werror -Wextra -std=c++98 -D NAMESPACE=ft ${OSRCS_TEST} -o ${NAME_TEST_FT} 
-        c++ -Wall -Werror -Wextra -std=c++98 -D NAMESPACE=std ${OSRCS_TEST} -o ${NAME_TEST_STD} 
-        c++ -Wall -Werror -Wextra -std=c++98 ${OSRCS_TIME} -o ${NAME_TIME} 
+	c++ -Wall -Werror -Wextra -I./include -fsanitize=address -std=c++98 -c $< -o ${<:.cpp=.o} -g
+${NAME_TEST_FT} :       
+	c++ -Wall -Werror -Wextra -std=c++98 -I./include -D NAMESPACE=ft ${SRCS_TEST} -o ${NAME_TEST_FT} 
+${NAME_TEST_STD} :      
+	c++ -Wall -Werror -Wextra -std=c++98 -I./include -D NAMESPACE=std ${SRCS_TEST} -o ${NAME_TEST_STD} 
+${NAME_TIME} :  ${OSRCS_TIME}
+	c++ -Wall -Werror -Wextra -fsanitize=address -std=c++98 ${OSRCS_TIME} -o ${NAME_TIME} -g
 clean :
 	rm -f ${OSRCS_TEST} ${OSRCS_TIME}
 fclean : clean
-	rm -f ${NAME}
+	rm -f ${NAME_TEST_FT} ${NAME_TEST_STD} ${NAME_TIME}
 re : fclean all
 
 .PHONY: all clean fclean re

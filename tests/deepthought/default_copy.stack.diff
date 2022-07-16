@@ -1,6 +1,0 @@
-0a1,3
-> foo::operator=(foo) CALLED
-> ~foo::foo()
-> foo::operator=(foo) CALLED
-20a24
-> ~foo::foo()
