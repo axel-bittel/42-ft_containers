@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_map.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: me <me@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/12 20:27:36 by abittel           #+#    #+#             */
-/*   Updated: 2022/07/14 20:22:23 by me               ###   ########.fr       */
+/*   Updated: 2022/07/16 16:57:12 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,17 @@
 #include <string>
 
 #include <chrono>
+#include <sys/time.h>
 int main()
 {
-    auto begin = std::chrono::high_resolution_clock::now();
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    long int begin = tp.tv_sec * 1000 + tp.tv_usec / 1000; 
+     
     ft::map<std::string, int>   map_ft;
     ft::map<std::string, int>   map_ft2;
 
-    for (int i = 1; i < 1000000; i++)
+    for (int i = 1; i < 30000; i++)
     {
         map_ft.insert(ft::make_pair<std::string>(std::to_string(i), i));
         map_ft.find(std::to_string(i));
@@ -36,12 +40,15 @@ int main()
         map_ft2.swap(map_ft);
     }
     map_ft.erase(map_ft.begin(), map_ft.end());
-    auto end = std::chrono::high_resolution_clock::now();
+    gettimeofday(&tp, NULL);
+    long int end = tp.tv_sec * 1000 + tp.tv_usec / 1000; 
+     
         
-    auto begin2 = std::chrono::high_resolution_clock::now();
+    gettimeofday(&tp, NULL);
+    long int begin2 = tp.tv_sec * 1000 + tp.tv_usec / 1000; 
     std::map<std::string, int>  map_std;
     std::map<std::string, int>  map_std2;
-    for (int i = 1; i < 1000000; i++)
+    for (int i = 1; i < 30000; i++)
     {
         map_std.insert(std::make_pair<std::string>(std::to_string(i), i));
         map_std.find(std::to_string(i));
@@ -55,9 +62,9 @@ int main()
         map_std2.swap(map_std2);
     }
     map_std.erase(map_std.begin(), map_std.end());
-    auto end2 = std::chrono::high_resolution_clock::now();
-    auto res1 =std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-    auto res2 =std::chrono::duration_cast<std::chrono::nanoseconds>(end2 - begin2);
-    std::cout << res1.count() << "/" << res2.count() << " : " << (float)res1.count() / (float)res2.count() << std::endl;
-
+    gettimeofday(&tp, NULL);
+    long int end2 = tp.tv_sec * 1000 + tp.tv_usec / 1000; 
+    unsigned int res1 = (end - begin);
+    unsigned int res2 = (end2 - begin2);
+    std::cout << res1 << "/" << res2 << " : " << (float)res1/(float)res2 << std::endl;
 }

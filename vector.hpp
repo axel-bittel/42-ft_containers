@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
 #include "iterator.hpp"
 #include <iostream>
 #include <stdexcept>
@@ -266,7 +267,7 @@ namespace ft
 		iterator insert (iterator position, const value_type& val)
 		{
 			unsigned int	pos = position - iterator(_begin);
-			pointer			p_pos = &(*position);
+			pointer			p_pos = (position.base());
 			if (_size >= _size_alloued)
 			{
 				up_size(_size + 1);
@@ -277,16 +278,8 @@ namespace ft
 				_end++;
 				_size++;
 			}
-			for (pointer i = _begin + _size - 1; i >= p_pos && i != _begin; i--)
-			{
+			for (pointer i = _begin + (_size - 1); i >= p_pos && i != _begin; --i)
 				*i = *(i - 1);
-				//std::cout << *i << std::endl;
-			}
-			/*for (unsigned int i = _size - 1; i >= pos && i > 0; i--)
-			{
-					_begin[i] = _begin[i - 1];
-					std::cout << _begin[i] << std::endl;
-			}*/
 			_begin[pos] = val;
 			return iterator(_begin + pos);
 		}

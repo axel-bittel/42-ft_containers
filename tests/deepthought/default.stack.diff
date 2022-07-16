@@ -1,0 +1,4 @@
+2a3
+> foo::operator=(foo) CALLED
+8a10
+> ~foo::foo()
