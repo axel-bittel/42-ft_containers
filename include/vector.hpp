@@ -250,7 +250,7 @@ namespace ft
 					_size++;
 					_end++;	
 				}
-				_begin[_size - 1] = val;
+				_alloc.construct(_begin + (_size - 1), val);
 			}
 			void pop_back()
 			{
@@ -279,8 +279,16 @@ namespace ft
 				_size++;
 			}
 			for (pointer i = _begin + (_size - 1); i >= p_pos && i != _begin; --i)
-				*i = *(i - 1);
-			_begin[pos] = val;
+			{
+				if (i == _end - 1)
+					_alloc.construct(i, *(i - 1));
+				else
+					*i = *(i - 1);
+			}
+			if (p_pos != _end - 1)
+				_begin[pos] = val;
+			else
+				_alloc.construct(_begin + pos, val);
 			return iterator(_begin + pos);
 		}
     	void insert (iterator position, size_type n, const value_type& val)
@@ -297,9 +305,19 @@ namespace ft
 			}
 			pointer			p_pos = &(*position) + n;
 			for (pointer i = _end - 1; i >= p_pos; i--)
-				*i = *(i - n);
+			{
+				if (i < _end - n)
+					*i = *(i - n);
+				else
+					_alloc.construct(i, *(i - n));
+			}
 			for (unsigned int i = pos; i < pos + n; i++)
-				_begin[i] = val;
+			{
+				if (i < _end - n)
+					_begin[i] = val;
+				else
+					_alloc.construct(_begin + i, val);
+			}
 		}
 		//TO CHECK
       	template<typename InputIterator>
@@ -319,9 +337,19 @@ namespace ft
 			}
 			pointer			p_pos = &(*position) + n;
 			for (pointer i = _end - 1; i >= p_pos; i--)
-				*i = *(i - n);
+			{
+				if (i < _end - n)
+					*i = *(i - n);
+				else
+					_alloc.construct(i, *(i - n));
+			}
 			for (size_type i = pos; i < pos + n; i++, first++)
-				_begin[i] = *first;
+			{
+				if (i < _end - n)
+					_begin[i] = *first;
+				else
+					_alloc.construct(_begin + i, *first);
+			}
 		}
       	template<typename InputIterator>
     	void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::__is_integer<InputIterator>::__value>::type * =  NULL)

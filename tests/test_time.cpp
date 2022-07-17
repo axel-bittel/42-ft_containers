@@ -20,6 +20,7 @@
 #include <string>
 
 #include <ctime>
+#include <sstream>
 #include <sys/time.h>
 
 void test_vector()
