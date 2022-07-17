@@ -6,7 +6,7 @@
 /*   By: abittel <abittel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 01:21:48 by abittel           #+#    #+#             */
-/*   Updated: 2022/07/12 19:56:11 by abittel          ###   ########.fr       */
+/*   Updated: 2022/07/17 23:16:49 by abittel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,8 +261,8 @@ class map
 
 	private:
 		Tree<Key, T, Compare>*	_tree;
-		std::allocator<tree_type>	_alloc_tree;
-		std::allocator<Node<T> >	_alloc_node;
+		typename allocator_type::template rebind<tree_type >::other	_alloc_tree;
+		typename allocator_type::template rebind<Node<T> >::other	_alloc_node;
 		Compare	_comp;
 		Alloc	_alloc;
 };
